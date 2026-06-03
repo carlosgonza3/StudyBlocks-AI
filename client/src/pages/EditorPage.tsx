@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { ArrowLeft, Play } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 
 import AppLayout from "@/components/layout/AppLayout";
+import MarkdownPreview from "@/components/preview/MarkdownPreview";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,19 +16,52 @@ const SAMPLE_MARKDOWN = `# Calculus 2 Study Guide
 
 A geometric series has the form:
 
-- a + ar + ar² + ar³
-- It converges if |r| < 1
-- It diverges if |r| >= 1
+$$
+a + ar + ar^2 + ar^3 + \\cdots
+$$
+
+It converges when:
+
+$$
+|r| < 1
+$$
+
+The sum is:
+
+$$
+S = \\frac{a}{1-r}
+$$
 
 ---
 
 ### Ratio Test
 
 Use the ratio test when the series has factorials, exponentials, or powers.
+
+For a series $\\sum a_n$, compute:
+
+$$
+L = \\lim_{n \\to \\infty} \\left| \\frac{a_{n+1}}{a_n} \\right|
+$$
+
+- If $L < 1$, the series converges absolutely.
+- If $L > 1$, the series diverges.
+- If $L = 1$, the test is inconclusive.
+
+## Integrals
+
+### Integration by Parts
+
+The formula is:
+
+$$
+\\int u\\,dv = uv - \\int v\\,du
+$$
 `;
 
 export default function EditorPage() {
     const { documentId } = useParams();
+    const [markdown, setMarkdown] = useState(SAMPLE_MARKDOWN);
 
     return (
         <AppLayout>
@@ -61,8 +96,9 @@ export default function EditorPage() {
                     </div>
 
                     <Textarea
-                        defaultValue={SAMPLE_MARKDOWN}
-                        className="min-h-[600px] resize-none rounded-none border-0 font-mono text-sm shadow-none focus-visible:ring-0"
+                        value={markdown}
+                        onChange={(event) => setMarkdown(event.target.value)}
+                        className="min-h-[650px] resize-none rounded-none border-0 bg-zinc-50 font-mono text-sm leading-7 shadow-none focus-visible:ring-0"
                     />
                 </Card>
 
@@ -71,8 +107,8 @@ export default function EditorPage() {
                         <h2 className="font-semibold">Live Preview</h2>
                     </div>
 
-                    <div className="min-h-[600px] p-6 text-zinc-500">
-                        Preview will be added in Phase 2.
+                    <div className="min-h-[650px] overflow-y-auto p-6">
+                        <MarkdownPreview content={markdown} />
                     </div>
                 </Card>
             </div>
