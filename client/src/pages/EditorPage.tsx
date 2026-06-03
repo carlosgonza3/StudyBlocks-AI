@@ -1,20 +1,16 @@
 import { useMemo, useRef, useState } from "react";
-
 import { ArrowLeft, Play } from "lucide-react";
-
 import { Link, useParams } from "react-router-dom";
 
 import DocumentOutline from "@/components/document/DocumentOutline";
 import AppLayout from "@/components/layout/AppLayout";
 import MarkdownPreview from "@/components/preview/MarkdownPreview";
-
-
+import StudyMode from "@/components/study/StudyMode";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-
-import { parseMarkdownSections } from "@/lib/markdown/parseMarkdownSections";
 import { flattenStudySections } from "@/lib/markdown/flattenStudySections";
+import { parseMarkdownSections } from "@/lib/markdown/parseMarkdownSections";
 
 const SAMPLE_MARKDOWN = `# Calculus 2 Study Guide
 
@@ -101,6 +97,9 @@ export default function EditorPage() {
 
     const [markdown, setMarkdown] = useState(SAMPLE_MARKDOWN);
     const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
+    const [isStudyMode, setIsStudyMode] = useState(false);
+    const [studyIndex, setStudyIndex] = useState(0);
+    const [reviewedSectionIds, setReviewedSectionIds] = useState<string[]>([]);
 
     const previewRef = useRef<HTMLDivElement | null>(null);
     const editorRef = useRef<HTMLTextAreaElement | null>(null);
@@ -195,82 +194,161 @@ export default function EditorPage() {
         });
     }
 
+    function handleStartStudyMode() {
+        setStudyIndex(0);
+        setIsStudyMode(true);
+    }
+
+    function calculateAutoReviewedIds(reviewedIds: string[]) {
+        const finalReviewedIds = new Set(reviewedIds);
+
+        function walk(section: typeof flatSections[number]) {
+            for (const childSection of section.children) {
+                walk(childSection);
+            }
+
+            if (section.children.length > 0) {
+                const allChildrenReviewed = section.children.every((childSection) =>
+                    finalReviewedIds.has(childSection.id),
+                );
+
+                if (allChildrenReviewed) {
+                    finalReviewedIds.add(section.id);
+                } else {
+                    finalReviewedIds.delete(section.id);
+                }
+            }
+        }
+
+        for (const rootSection of sections) {
+            walk(rootSection);
+        }
+
+        return Array.from(finalReviewedIds);
+    }
+
+    function handleToggleReviewed(sectionId: string) {
+        setReviewedSectionIds((currentIds) => {
+            const selectedSection = flatSections.find(
+                (section) => section.id === sectionId,
+            );
+
+            if (!selectedSection) {
+                return currentIds;
+            }
+
+            const updatedIds = new Set(currentIds);
+            const isReviewed = updatedIds.has(sectionId);
+
+            // Parent sections cannot be manually reviewed.
+            // They are reviewed automatically when all their children are reviewed.
+            if (selectedSection.children.length > 0) {
+                return calculateAutoReviewedIds(Array.from(updatedIds));
+            }
+
+            if (isReviewed) {
+                updatedIds.delete(sectionId);
+            } else {
+                updatedIds.add(sectionId);
+            }
+
+            return calculateAutoReviewedIds(Array.from(updatedIds));
+        });
+    }
+
+
     return (
         <AppLayout>
-            <div className="mb-6 flex items-center justify-between gap-4">
-                <div>
-                    <Button
-                        asChild
-                        variant="ghost"
-                        className="mb-3 px-0 text-muted-foreground hover:bg-transparent hover:text-foreground"
-                    >
-                        <Link to="/">
-                            <ArrowLeft size={16} />
-                            Back to dashboard
-                        </Link>
-                    </Button>
+            {isStudyMode ? (
+                <StudyMode
+                    outlineSections={sections}
+                    studySections={flatSections}
+                    currentIndex={studyIndex}
+                    reviewedSectionIds={reviewedSectionIds}
+                    onCurrentIndexChange={setStudyIndex}
+                    onToggleReviewed={handleToggleReviewed}
+                    onExit={() => setIsStudyMode(false)}
+                />
+            ) : (
+                <>
+                    <div className="mb-6 flex items-center justify-between gap-4">
+                        <div>
+                            <Button
+                                asChild
+                                variant="ghost"
+                                className="mb-3 px-0 text-muted-foreground hover:bg-transparent hover:text-foreground"
+                            >
+                                <Link to="/">
+                                    <ArrowLeft size={16} />
+                                    Back to dashboard
+                                </Link>
+                            </Button>
 
-                    <h1 className="text-3xl font-bold tracking-tight text-foreground">
-                        {documentTitle}
-                    </h1>
+                            <h1 className="text-3xl font-bold tracking-tight text-foreground">
+                                {documentTitle}
+                            </h1>
 
-                    <p className="mt-1 text-sm text-muted-foreground">
-                        Editing document: {documentId}
-                    </p>
-                </div>
+                            <p className="mt-1 text-sm text-muted-foreground">
+                                Editing document: {documentId}
+                            </p>
+                        </div>
 
-                <Button>
-                    <Play size={16} />
-                    Study
-                </Button>
-            </div>
-
-            <div className="grid gap-6 xl:grid-cols-[280px_1fr_1fr]">
-                <Card className="overflow-hidden border-border bg-card p-0 text-card-foreground gap-0">
-                    <div className="border-b border-border bg-card px-4 py-3">
-                        <h2 className="font-semibold text-card-foreground">
-                            Document Outline
-                        </h2>
+                        <Button onClick={handleStartStudyMode}>
+                            <Play size={16} />
+                            Study
+                        </Button>
                     </div>
 
-                    <div className="h-[650px] overflow-y-auto p-4">
-                        <DocumentOutline
-                            sections={sections}
-                            activeSectionId={activeSectionId}
-                            onSectionSelect={handleSectionSelect}
-                        />
-                    </div>
-                </Card>
+                    <div className="grid gap-6 xl:grid-cols-[280px_1fr_1fr]">
+                        <Card className="overflow-hidden border-border bg-card p-0 text-card-foreground">
+                            <div className="border-b border-border bg-card px-4 py-3">
+                                <h2 className="font-semibold text-card-foreground">
+                                    Document Outline
+                                </h2>
+                            </div>
 
-                <Card className="overflow-hidden border-border bg-card p-0 text-card-foreground gap-0">
-                    <div className="border-b border-border bg-card px-4 py-3">
-                        <h2 className="font-semibold text-card-foreground">
-                            Markdown Editor
-                        </h2>
-                    </div>
+                            <div className="h-[650px] overflow-y-auto p-4">
+                                <DocumentOutline
+                                    sections={sections}
+                                    activeSectionId={activeSectionId}
+                                    onSectionSelect={handleSectionSelect}
+                                />
+                            </div>
+                        </Card>
 
-                    <Textarea
-                        ref={editorRef}
-                        value={markdown}
-                        onChange={(event) => setMarkdown(event.target.value)}
-                        wrap="off"
-                        className="h-[650px] resize-none rounded-none border-0 bg-muted font-mono text-sm leading-7 text-foreground shadow-none placeholder:text-muted-foreground focus-visible:ring-0"
-                    />
-                </Card>
+                        <Card className="overflow-hidden border-border bg-card p-0 text-card-foreground">
+                            <div className="border-b border-border bg-card px-4 py-3">
+                                <h2 className="font-semibold text-card-foreground">
+                                    Markdown Editor
+                                </h2>
+                            </div>
 
-                <Card className="overflow-hidden border-border bg-card p-0 text-card-foreground gap-0">
-                    <div className="border-b border-border bg-card px-4 py-3">
-                        <h2 className="font-semibold text-card-foreground">Live Preview</h2>
-                    </div>
+                            <Textarea
+                                ref={editorRef}
+                                value={markdown}
+                                onChange={(event) => setMarkdown(event.target.value)}
+                                wrap="off"
+                                className="h-[650px] resize-none rounded-none border-0 bg-muted font-mono text-sm leading-7 text-foreground shadow-none placeholder:text-muted-foreground focus-visible:ring-0"
+                            />
+                        </Card>
 
-                    <div
-                        ref={previewRef}
-                        className="relative h-[650px] overflow-y-auto scroll-smooth bg-card p-6"
-                    >
-                        <MarkdownPreview content={markdown} sections={sections} />
+                        <Card className="overflow-hidden border-border bg-card p-0 text-card-foreground">
+                            <div className="border-b border-border bg-card px-4 py-3">
+                                <h2 className="font-semibold text-card-foreground">
+                                    Live Preview
+                                </h2>
+                            </div>
+
+                            <div
+                                ref={previewRef}
+                                className="relative h-[650px] overflow-y-auto scroll-smooth bg-card p-6"
+                            >
+                                <MarkdownPreview content={markdown} sections={sections} />
+                            </div>
+                        </Card>
                     </div>
-                </Card>
-            </div>
+                </>
+            )}
         </AppLayout>
     );
 }

@@ -19,7 +19,7 @@ export default function DashboardPage() {
 
                 <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
                     Write Markdown once, generate an outline automatically, and study each
-                    section as a focused card.
+                    section as a focused blocks.
                 </p>
 
                 <div className="mt-6">

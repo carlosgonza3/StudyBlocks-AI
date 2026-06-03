@@ -1,25 +1,29 @@
-import { Hash } from "lucide-react";
+import { CheckCircle2, Hash } from "lucide-react";
 
 import type { StudySection } from "@/types/study-section";
 
 type DocumentOutlineProps = {
     sections: StudySection[];
     activeSectionId: string | null;
+    reviewedSectionIds?: string[];
     onSectionSelect: (sectionId: string) => void;
 };
 
 type OutlineItemProps = {
     section: StudySection;
     activeSectionId: string | null;
+    reviewedSectionIds: string[];
     onSectionSelect: (sectionId: string) => void;
 };
 
 function OutlineItem({
                          section,
                          activeSectionId,
+                         reviewedSectionIds,
                          onSectionSelect,
                      }: OutlineItemProps) {
     const isActive = activeSectionId === section.id;
+    const isReviewed = reviewedSectionIds.includes(section.id);
 
     return (
         <li>
@@ -30,25 +34,41 @@ function OutlineItem({
                     "group flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm transition",
                     isActive
                         ? "bg-primary text-primary-foreground"
-                        : "text-foreground hover:bg-accent hover:text-accent-foreground",
+                        : isReviewed
+                            ? "bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-400"
+                            : "text-foreground hover:bg-accent hover:text-accent-foreground",
                 ].join(" ")}
             >
-                <Hash
-                    size={14}
-                    className={[
-                        "shrink-0 transition",
-                        isActive
-                            ? "text-primary-foreground"
-                            : "text-muted-foreground group-hover:text-accent-foreground",
-                    ].join(" ")}
-                />
+                {isReviewed ? (
+                    <CheckCircle2
+                        size={14}
+                        className={[
+                            "shrink-0 transition",
+                            isActive
+                                ? "text-primary-foreground"
+                                : "text-emerald-600 dark:text-emerald-400",
+                        ].join(" ")}
+                    />
+                ) : (
+                    <Hash
+                        size={14}
+                        className={[
+                            "shrink-0 transition",
+                            isActive
+                                ? "text-primary-foreground"
+                                : "text-muted-foreground group-hover:text-accent-foreground",
+                        ].join(" ")}
+                    />
+                )}
 
                 <span
                     className={[
                         "min-w-0 flex-1 truncate",
                         isActive
                             ? "text-primary-foreground"
-                            : "text-foreground group-hover:text-accent-foreground",
+                            : isReviewed
+                                ? "text-emerald-700 dark:text-emerald-400"
+                                : "text-foreground group-hover:text-accent-foreground",
                     ].join(" ")}
                 >
           {section.title}
@@ -59,7 +79,9 @@ function OutlineItem({
                         "rounded-md px-1.5 py-0.5 text-[10px] font-medium",
                         isActive
                             ? "bg-primary-foreground/15 text-primary-foreground"
-                            : "bg-muted text-muted-foreground",
+                            : isReviewed
+                                ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
+                                : "bg-muted text-muted-foreground",
                     ].join(" ")}
                 >
           H{section.level}
@@ -73,6 +95,7 @@ function OutlineItem({
                             key={childSection.id}
                             section={childSection}
                             activeSectionId={activeSectionId}
+                            reviewedSectionIds={reviewedSectionIds}
                             onSectionSelect={onSectionSelect}
                         />
                     ))}
@@ -85,6 +108,7 @@ function OutlineItem({
 export default function DocumentOutline({
                                             sections,
                                             activeSectionId,
+                                            reviewedSectionIds = [],
                                             onSectionSelect,
                                         }: DocumentOutlineProps) {
     if (sections.length === 0) {
@@ -107,6 +131,7 @@ export default function DocumentOutline({
                         key={section.id}
                         section={section}
                         activeSectionId={activeSectionId}
+                        reviewedSectionIds={reviewedSectionIds}
                         onSectionSelect={onSectionSelect}
                     />
                 ))}
