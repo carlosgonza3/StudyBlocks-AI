@@ -8,14 +8,22 @@
     "packages/*"
   ],
   "scripts": {
+    "dev": "concurrently --kill-others-on-fail --names WEB,API \"npm run dev:web\" \"npm run dev:api\"",
     "dev:web": "npm run dev --workspace @studyblocks/web",
+    "dev:api": "npm run start:dev --workspace @studyblocks/api",
+    "build": "npm run build:web && npm run build:api",
     "build:web": "npm run build --workspace @studyblocks/web",
+    "build:api": "npm run build --workspace @studyblocks/api",
+    "lint": "npm run lint:web && npm run lint:api",
     "lint:web": "npm run lint --workspace @studyblocks/web",
+    "lint:api": "npm run lint --workspace @studyblocks/api",
+    "test": "npm run test:web && npm run test:api",
     "test:web": "npm run test --workspace @studyblocks/web",
     "test:web:watch": "npm run test:watch --workspace @studyblocks/web",
-    "dev": "npm run dev:web",
-    "build": "npm run build:web",
-    "lint": "npm run lint:web",
-    "test": "npm run test:web"
+    "test:api": "npm run test --workspace @studyblocks/api",
+    "test:api:e2e": "npm run test:e2e --workspace @studyblocks/api"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }
