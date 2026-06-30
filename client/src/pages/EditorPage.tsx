@@ -300,7 +300,7 @@ export default function EditorPage() {
                     </div>
 
                     <div className="grid gap-6 xl:grid-cols-[280px_1fr_1fr]">
-                        <Card className="overflow-hidden border-border bg-card p-0 text-card-foreground">
+                        <Card className="overflow-hidden border-border bg-card p-0 text-card-foreground gap-0">
                             <div className="border-b border-border bg-card px-4 py-3">
                                 <h2 className="font-semibold text-card-foreground">
                                     Document Outline
@@ -316,7 +316,7 @@ export default function EditorPage() {
                             </div>
                         </Card>
 
-                        <Card className="overflow-hidden border-border bg-card p-0 text-card-foreground">
+                        <Card className="overflow-hidden border-border bg-card p-0 text-card-foreground gap-0">
                             <div className="border-b border-border bg-card px-4 py-3">
                                 <h2 className="font-semibold text-card-foreground">
                                     Markdown Editor
@@ -332,7 +332,7 @@ export default function EditorPage() {
                             />
                         </Card>
 
-                        <Card className="overflow-hidden border-border bg-card p-0 text-card-foreground">
+                        <Card className="overflow-hidden border-border bg-card p-0 text-card-foreground gap-0">
                             <div className="border-b border-border bg-card px-4 py-3">
                                 <h2 className="font-semibold text-card-foreground">
                                     Live Preview
