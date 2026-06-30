@@ -11,8 +11,11 @@
     "dev:web": "npm run dev --workspace @studyblocks/web",
     "build:web": "npm run build --workspace @studyblocks/web",
     "lint:web": "npm run lint --workspace @studyblocks/web",
+    "test:web": "npm run test --workspace @studyblocks/web",
+    "test:web:watch": "npm run test:watch --workspace @studyblocks/web",
     "dev": "npm run dev:web",
     "build": "npm run build:web",
-    "lint": "npm run lint:web"
+    "lint": "npm run lint:web",
+    "test": "npm run test:web"
   }
 }
