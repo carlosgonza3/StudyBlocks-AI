@@ -1,4 +1,5 @@
 import {
+
     BookOpen,
     ChevronDown,
     CircleGauge,
@@ -10,7 +11,8 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import { useTheme } from "@/components/theme/ThemeProvider";
+import { useTheme } from "@/components/theme/useTheme";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
