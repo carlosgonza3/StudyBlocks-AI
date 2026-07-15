@@ -2,6 +2,7 @@ type Environment = {
   NODE_ENV: 'development' | 'test' | 'production';
   PORT: number;
   WEB_ORIGIN: string;
+  DATABASE_URL: string;
 };
 
 const validNodeEnvironments = ['development', 'test', 'production'] as const;
@@ -50,6 +51,26 @@ function parseWebOrigin(value: unknown): string {
   }
 }
 
+function parseDatabaseUrl(value: unknown): string {
+  if (typeof value !== 'string' || value.trim().length === 0) {
+    throw new Error('DATABASE_URL is required.');
+  }
+
+  const databaseUrl = value.trim();
+
+  try {
+    const url = new URL(databaseUrl);
+
+    if (!['postgresql:', 'postgres:'].includes(url.protocol)) {
+      throw new Error();
+    }
+
+    return databaseUrl;
+  } catch {
+    throw new Error('DATABASE_URL must be a valid PostgreSQL connection URL.');
+  }
+}
+
 export function validateEnvironment(
   configuration: Record<string, unknown>,
 ): Environment {
@@ -57,5 +78,6 @@ export function validateEnvironment(
     NODE_ENV: parseNodeEnvironment(configuration.NODE_ENV),
     PORT: parsePort(configuration.PORT),
     WEB_ORIGIN: parseWebOrigin(configuration.WEB_ORIGIN),
+    DATABASE_URL: parseDatabaseUrl(configuration.DATABASE_URL),
   };
 }

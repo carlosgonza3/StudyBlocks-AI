@@ -1,0 +1,16 @@
+services:
+  database:
+    image: postgres:17-alpine
+    container_name: studyblocks-database
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: studyblocks
+      POSTGRES_PASSWORD: studyblocks_password
+      POSTGRES_DB: studyblocks_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - studyblocks_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  studyblocks_postgres_data:

@@ -21,7 +21,12 @@
     "test:web": "npm run test --workspace @studyblocks/web",
     "test:web:watch": "npm run test:watch --workspace @studyblocks/web",
     "test:api": "npm run test --workspace @studyblocks/api",
-    "test:api:e2e": "npm run test:e2e --workspace @studyblocks/api"
+    "test:api:e2e": "npm run test:e2e --workspace @studyblocks/api",
+    "db:up": "docker compose up -d database",
+    "db:down": "docker compose down",
+    "db:logs": "docker compose logs -f database",
+    "prisma:generate": "npm run prisma:generate --workspace @studyblocks/api",
+    "prisma:migrate": "npm run prisma:migrate --workspace @studyblocks/api"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
