@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { FileText, Loader2, Plus, RefreshCw } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import AppLayout from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
@@ -31,6 +31,8 @@ function formatDate(value: string): string {
 }
 
 export default function DashboardPage() {
+    const navigate = useNavigate();
+
     const [courses, setCourses] = useState<Course[]>([]);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -85,6 +87,7 @@ export default function DashboardPage() {
 
     function handleCourseCreated(course: Course) {
         setCourses((currentCourses) => [course, ...currentCourses]);
+        void navigate(`/courses/${course.id}`);
     }
 
     return (
@@ -202,30 +205,37 @@ export default function DashboardPage() {
                 ) : (
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                         {courses.map((course) => (
-                            <Card
-                                className="border-border bg-card text-card-foreground transition hover:-translate-y-1 hover:shadow-md"
+                            <Link
+                                className="block"
                                 key={course.id}
+                                to={`/courses/${course.id}`}
                             >
-                                <CardHeader>
-                                    <div className="mb-3 flex size-10 items-center justify-center rounded-xl bg-muted text-foreground">
-                                        <FileText size={20} />
-                                    </div>
+                                <Card className="h-full border-border bg-card text-card-foreground transition hover:-translate-y-1 hover:shadow-md">
+                                    <CardHeader>
+                                        <div className="mb-3 flex size-10 items-center justify-center rounded-xl bg-muted text-foreground">
+                                            <FileText size={20} />
+                                        </div>
 
-                                    <CardTitle>{course.title}</CardTitle>
-                                </CardHeader>
+                                        <CardTitle>
+                                            {course.title}
+                                        </CardTitle>
+                                    </CardHeader>
 
-                                <CardContent>
-                                    <p className="text-sm text-muted-foreground">
-                                        {course.description ??
-                                            "No description provided."}
-                                    </p>
+                                    <CardContent>
+                                        <p className="text-sm text-muted-foreground">
+                                            {course.description ??
+                                                "No description provided."}
+                                        </p>
 
-                                    <p className="mt-4 text-xs text-muted-foreground">
-                                        Updated{" "}
-                                        {formatDate(course.updatedAt)}
-                                    </p>
-                                </CardContent>
-                            </Card>
+                                        <p className="mt-4 text-xs text-muted-foreground">
+                                            Updated{" "}
+                                            {formatDate(
+                                                course.updatedAt,
+                                            )}
+                                        </p>
+                                    </CardContent>
+                                </Card>
+                            </Link>
                         ))}
                     </div>
                 )}

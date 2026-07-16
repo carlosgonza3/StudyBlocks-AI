@@ -1,19 +1,18 @@
-import { apiRequest } from '@/lib/api/apiClient';
+import { apiRequest } from "@/lib/api/apiClient";
 
-import type {
-    Course,
-    CreateCourseInput,
-} from '../types/course';
+import type { Course, CreateCourseInput } from "../types/course";
 
 export function listCourses(): Promise<Course[]> {
-    return apiRequest<Course[]>('/courses');
+    return apiRequest<Course[]>("/courses");
 }
 
-export function createCourse(
-    input: CreateCourseInput,
-): Promise<Course> {
-    return apiRequest<Course>('/courses', {
-        method: 'POST',
+export function getCourse(courseId: string): Promise<Course> {
+    return apiRequest<Course>(`/courses/${courseId}`);
+}
+
+export function createCourse(input: CreateCourseInput): Promise<Course> {
+    return apiRequest<Course>("/courses", {
+        method: "POST",
         body: input,
     });
 }
