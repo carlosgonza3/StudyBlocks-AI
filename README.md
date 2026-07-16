@@ -136,17 +136,3 @@ Course
 ```
 
 The local development database URL in `.env.example` is safe to commit because it points to the local Docker database.
-
-Never commit real production credentials, API keys, or cloud database URLs.
-
-## Next Phase
-
-Build the Course CRUD API:
-
-```http
-GET    /api/v1/courses
-GET    /api/v1/courses/:id
-POST   /api/v1/courses
-PATCH  /api/v1/courses/:id
-DELETE /api/v1/courses/:id
-```
