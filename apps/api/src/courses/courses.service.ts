@@ -43,6 +43,12 @@ export class CoursesService {
         title: createCourseDto.title,
         description: createCourseDto.description ?? null,
         ownerId: LOCAL_DEV_OWNER_ID,
+        studyGuide: {
+          create: {
+            title: `${createCourseDto.title} Study Guide`,
+            contentMarkdown: '',
+          },
+        },
       },
     });
   }

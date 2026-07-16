@@ -93,7 +93,7 @@ describe('CoursesService', () => {
     ).rejects.toBeInstanceOf(NotFoundException);
   });
 
-  it('creates a course for the local development owner', async () => {
+  it('creates a course and its main study guide for the local development owner', async () => {
     const course = createCourseFixture();
 
     prismaService.course.create.mockResolvedValue(course);
@@ -110,6 +110,12 @@ describe('CoursesService', () => {
         title: 'Calculus II',
         description: 'Series and integrals',
         ownerId: 'local-dev-user',
+        studyGuide: {
+          create: {
+            title: 'Calculus II Study Guide',
+            contentMarkdown: '',
+          },
+        },
       },
     });
   });
