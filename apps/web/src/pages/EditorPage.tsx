@@ -24,7 +24,7 @@ $$
 a + ar + ar^2 + ar^3 + \\cdots
 $$
 
-It converges when:
+It converges when:when
 
 $$
 |r| < 1

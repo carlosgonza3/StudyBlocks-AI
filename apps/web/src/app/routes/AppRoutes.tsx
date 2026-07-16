@@ -8,11 +8,19 @@ export default function AppRoutes() {
     return (
         <Routes>
             <Route element={<DashboardPage />} path="/" />
+
             <Route
                 element={<CourseWorkspacePage />}
                 path="/courses/:courseId"
             />
+
+            <Route
+                element={<EditorPage />}
+                path="/courses/:courseId/study-guide"
+            />
+
             <Route element={<EditorPage />} path="/documents/:documentId" />
+
             <Route element={<Navigate replace to="/" />} path="*" />
         </Routes>
     );

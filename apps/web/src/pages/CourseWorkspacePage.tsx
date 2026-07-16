@@ -8,6 +8,7 @@ import {
     GitBranch,
     Loader2,
     MessageSquareText,
+    PencilLine,
     Upload,
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
@@ -132,6 +133,25 @@ export default function CourseWorkspacePage() {
                                     {course.description ??
                                         "No description provided yet."}
                                 </p>
+
+                                <div className="mt-6 flex flex-wrap gap-3">
+                                    <Button asChild>
+                                        <Link
+                                            to={`/courses/${course.id}/study-guide`}
+                                        >
+                                            <PencilLine size={16} />
+                                            Open Main Study Guide
+                                        </Link>
+                                    </Button>
+
+                                    <Button asChild variant="outline">
+                                        <Link
+                                            to={`/courses/${course.id}/study-guide`}
+                                        >
+                                            Start from scratch
+                                        </Link>
+                                    </Button>
+                                </div>
                             </div>
 
                             <Card className="w-full border-border bg-card text-card-foreground lg:max-w-sm">
@@ -167,6 +187,42 @@ export default function CourseWorkspacePage() {
                         </div>
                     </section>
 
+                    <section className="mb-10">
+                        <Card className="border-border bg-card text-card-foreground">
+                            <CardHeader>
+                                <div className="mb-3 flex size-10 items-center justify-center rounded-xl bg-muted text-foreground">
+                                    <BookOpen size={20} />
+                                </div>
+
+                                <CardTitle>Main Study Guide</CardTitle>
+                            </CardHeader>
+
+                            <CardContent>
+                                <p className="max-w-3xl text-sm text-muted-foreground">
+                                    This is the core learning object for the
+                                    course. You can write it from scratch now,
+                                    and later this same space will support AI
+                                    generation from uploaded documents.
+                                </p>
+
+                                <div className="mt-5 flex flex-wrap gap-3">
+                                    <Button asChild>
+                                        <Link
+                                            to={`/courses/${course.id}/study-guide`}
+                                        >
+                                            <PencilLine size={16} />
+                                            Open editor
+                                        </Link>
+                                    </Button>
+
+                                    <Button disabled type="button" variant="outline">
+                                        Generate with AI soon
+                                    </Button>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </section>
+
                     <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                         <Card className="border-border bg-card text-card-foreground">
                             <CardHeader>
@@ -179,8 +235,8 @@ export default function CourseWorkspacePage() {
 
                             <CardContent>
                                 <p className="text-sm text-muted-foreground">
-                                    Upload Markdown, text, or PDF files for
-                                    this course.
+                                    Upload Markdown, text, or PDF files as
+                                    source material for this course.
                                 </p>
                             </CardContent>
                         </Card>
@@ -191,13 +247,13 @@ export default function CourseWorkspacePage() {
                                     <FileText size={20} />
                                 </div>
 
-                                <CardTitle>Documents</CardTitle>
+                                <CardTitle>Source documents</CardTitle>
                             </CardHeader>
 
                             <CardContent>
                                 <p className="text-sm text-muted-foreground">
-                                    Manage parsed study guides and source
-                                    documents.
+                                    Manage documents that feed into the main
+                                    Study Guide.
                                 </p>
                             </CardContent>
                         </Card>
@@ -230,8 +286,8 @@ export default function CourseWorkspacePage() {
 
                             <CardContent>
                                 <p className="text-sm text-muted-foreground">
-                                    Ask questions grounded in your uploaded
-                                    course material.
+                                    Ask questions grounded in the main Study
+                                    Guide and source material.
                                 </p>
                             </CardContent>
                         </Card>
@@ -241,7 +297,7 @@ export default function CourseWorkspacePage() {
                         <Card className="border-border bg-card text-card-foreground">
                             <CardHeader>
                                 <div className="mb-3 flex size-10 items-center justify-center rounded-xl bg-muted text-foreground">
-                                    <BookOpen size={20} />
+                                    <FileText size={20} />
                                 </div>
 
                                 <CardTitle>Course activity</CardTitle>
@@ -250,13 +306,12 @@ export default function CourseWorkspacePage() {
                             <CardContent>
                                 <div className="rounded-xl border border-dashed border-border p-8 text-center">
                                     <p className="font-medium text-foreground">
-                                        No documents uploaded yet
+                                        No source documents uploaded yet
                                     </p>
 
                                     <p className="mt-1 text-sm text-muted-foreground">
-                                        The next phase will add document
-                                        upload and persistence for this
-                                        workspace.
+                                        The next phase will add document upload
+                                        and persistence for this workspace.
                                     </p>
                                 </div>
                             </CardContent>
@@ -273,6 +328,7 @@ export default function CourseWorkspacePage() {
 
                             <CardContent>
                                 <ul className="space-y-3 text-sm text-muted-foreground">
+                                    <li>Main Study Guide: route connected</li>
                                     <li>Document upload: planned</li>
                                     <li>Structured parsing: planned</li>
                                     <li>Concept extraction: planned</li>
