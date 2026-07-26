@@ -39,6 +39,19 @@ function findNodes(
 }
 
 describe("Study Guide editor Markdown", () => {
+    it("includes horizontal-rule cursor spacing behavior", () => {
+        const extensions =
+            createStudyGuideEditorExtensions();
+
+        expect(
+            extensions.some(
+                (extension) =>
+                    extension.name ===
+                    "horizontalRuleSpacing",
+            ),
+        ).toBe(true);
+    });
+
     it("round-trips headings, lists, emphasis, code, and blockquotes", () => {
         const manager = createMarkdownManager();
         const markdown = `# Guide
