@@ -11,3 +11,8 @@ export type CreateCourseInput = {
     title: string;
     description?: string | null;
 };
+
+export type UpdateCourseInput = {
+    title?: string;
+    description?: string | null;
+};
