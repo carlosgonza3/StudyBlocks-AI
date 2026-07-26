@@ -67,6 +67,13 @@ export class CoursesService {
       data: {
         title: updateCourseDto.title,
         description: updateCourseDto.description,
+        studyGuide: updateCourseDto.title
+          ? {
+              update: {
+                title: `${updateCourseDto.title} Study Guide`,
+              },
+            }
+          : undefined,
       },
     });
   }

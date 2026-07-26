@@ -555,11 +555,6 @@ export default function EditorPage() {
         ? "Back to course"
         : "Back to dashboard";
 
-    const editingLabel =
-        isCourseStudyGuide
-            ? "Editing main Study Guide"
-            : `Editing document: ${documentId}`;
-
     useEffect(() => {
         if (!hasUnsavedChanges) {
             return undefined;
@@ -669,10 +664,6 @@ export default function EditorPage() {
 
                                     }}
                                 />
-
-                                <p className="mt-2 text-sm text-muted-foreground">
-                                    {editingLabel}
-                                </p>
 
                                 <div className="mt-4 flex flex-wrap gap-2 text-xs text-muted-foreground">
                                     <span className="rounded-full border border-border bg-muted px-3 py-1">
@@ -1168,13 +1159,6 @@ export default function EditorPage() {
                                         Outline
                                     </h2>
                                     </div>
-
-                                    <p className="mt-2 truncate text-sm font-medium text-foreground">
-                                        {documentTitle}
-                                    </p>
-                                    <p className="mt-1 text-xs text-muted-foreground">
-                                        {editingLabel}
-                                    </p>
                                 </div>
 
                                 <div className="min-h-0 flex-1 overflow-y-auto p-4">

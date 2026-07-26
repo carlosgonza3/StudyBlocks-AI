@@ -148,6 +148,36 @@ describe('CoursesService', () => {
       data: {
         title: 'Advanced Calculus II',
         description: undefined,
+        studyGuide: {
+          update: {
+            title: 'Advanced Calculus II Study Guide',
+          },
+        },
+      },
+    });
+  });
+
+  it('does not rename the study guide when only the description changes', async () => {
+    const existingCourse = createCourseFixture();
+    const updatedCourse = createCourseFixture({
+      description: 'Updated description',
+    });
+
+    prismaService.course.findFirst.mockResolvedValue(existingCourse);
+    prismaService.course.update.mockResolvedValue(updatedCourse);
+
+    await coursesService.update(existingCourse.id, {
+      description: 'Updated description',
+    });
+
+    expect(prismaService.course.update).toHaveBeenCalledWith({
+      where: {
+        id: existingCourse.id,
+      },
+      data: {
+        title: undefined,
+        description: 'Updated description',
+        studyGuide: undefined,
       },
     });
   });
