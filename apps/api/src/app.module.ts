@@ -5,6 +5,7 @@ import { validateEnvironment } from './config/environment.validation';
 import { CoursesModule } from './courses/courses.module';
 import { DatabaseModule } from './database/database.module';
 import { HealthModule } from './health/health.module';
+import { SourceDocumentsModule } from './source-documents/source-documents.module';
 import { StudyGuidesModule } from './study-guides/study-guides.module';
 
 @Module({
@@ -18,6 +19,7 @@ import { StudyGuidesModule } from './study-guides/study-guides.module';
     DatabaseModule,
     HealthModule,
     CoursesModule,
+    SourceDocumentsModule,
     StudyGuidesModule,
   ],
 })

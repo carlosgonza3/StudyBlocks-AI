@@ -4,12 +4,16 @@ import type { Course } from '@prisma/client';
 import { PrismaService } from '../database/prisma.service';
 import type { CreateCourseDto } from './dto/create-course.dto';
 import type { UpdateCourseDto } from './dto/update-course.dto';
+import { SourceDocumentStorageService } from '../source-documents/source-document-storage.service';
 
 const LOCAL_DEV_OWNER_ID = 'local-dev-user';
 
 @Injectable()
 export class CoursesService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly sourceDocumentStorageService: SourceDocumentStorageService,
+  ) {}
 
   async findAll(): Promise<Course[]> {
     return this.prismaService.course.findMany({
@@ -70,10 +74,14 @@ export class CoursesService {
   async remove(id: string): Promise<Course> {
     await this.findOne(id);
 
-    return this.prismaService.course.delete({
+    const deletedCourse = await this.prismaService.course.delete({
       where: {
         id,
       },
     });
+
+    await this.sourceDocumentStorageService.removeCourseDirectory(id);
+
+    return deletedCourse;
   }
 }

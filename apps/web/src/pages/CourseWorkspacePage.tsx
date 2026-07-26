@@ -6,12 +6,10 @@ import {
     BookOpen,
     Check,
     Clock3,
-    FileText,
     GitBranch,
     Loader2,
     MessageSquareText,
     PencilLine,
-    Upload,
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 
@@ -20,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { getCourse } from "@/features/courses/api/coursesApi";
 import CourseDetailsDialog from "@/features/courses/components/CourseDetailsDialog";
 import type { Course } from "@/features/courses/types/course";
+import SourceDocumentsSection from "@/features/source-documents/components/SourceDocumentsSection";
 
 function getReadableError(error: unknown): string {
     if (error instanceof Error) {
@@ -36,20 +35,6 @@ function formatDate(value: string): string {
 }
 
 const workspaceTools = [
-    {
-        description:
-            "Add notes, PDFs, and course material.",
-        icon: Upload,
-        label: "Upload material",
-        status: "Coming soon",
-    },
-    {
-        description:
-            "Organize everything used by this course.",
-        icon: FileText,
-        label: "Source documents",
-        status: "Coming soon",
-    },
     {
         description:
             "Explore concepts and how they connect.",
@@ -74,8 +59,8 @@ const featureAvailability = [
     },
     {
         label: "Document library",
-        ready: false,
-        status: "Coming soon",
+        ready: true,
+        status: "Available",
     },
     {
         label: "Knowledge graph",
@@ -312,13 +297,17 @@ export default function CourseWorkspacePage() {
                                 </div>
                             </section>
 
+                            <SourceDocumentsSection
+                                courseId={course.id}
+                            />
+
                             <section className="mt-12">
                                 <div className="mb-2">
                                     <p className="text-xs font-semibold uppercase tracking-[0.15em] text-muted-foreground">
-                                        Course toolkit
+                                        Coming next
                                     </p>
                                     <h2 className="mt-2 text-2xl font-semibold tracking-tight">
-                                        Build beyond the guide
+                                        AI learning tools
                                     </h2>
                                 </div>
 

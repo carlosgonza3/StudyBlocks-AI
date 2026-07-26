@@ -33,6 +33,10 @@ type MockPrismaService = {
   };
 };
 
+const sourceDocumentStorageService = {
+  removeCourseDirectory: jest.fn<() => Promise<void>>(),
+};
+
 describe('CoursesService', () => {
   let coursesService: CoursesService;
   let prismaService: MockPrismaService;
@@ -51,7 +55,9 @@ describe('CoursesService', () => {
 
     coursesService = new CoursesService(
       prismaService as unknown as PrismaService,
+      sourceDocumentStorageService as never,
     );
+    sourceDocumentStorageService.removeCourseDirectory.mockResolvedValue();
   });
 
   it('returns all courses for the local development owner', async () => {
@@ -159,5 +165,8 @@ describe('CoursesService', () => {
         id: course.id,
       },
     });
+    expect(
+      sourceDocumentStorageService.removeCourseDirectory,
+    ).toHaveBeenCalledWith(course.id);
   });
 });
