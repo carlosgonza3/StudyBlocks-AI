@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 
 import CourseWorkspacePage from "@/pages/CourseWorkspacePage";
 import DashboardPage from "@/pages/DashboardPage";
+import EditorPreferencesPage from "@/pages/EditorPreferencesPage";
 import EditorPage from "@/pages/EditorPage";
 
 export default function AppRoutes() {
@@ -20,6 +21,11 @@ export default function AppRoutes() {
             />
 
             <Route element={<EditorPage />} path="/documents/:documentId" />
+
+            <Route
+                element={<EditorPreferencesPage />}
+                path="/settings/editor"
+            />
 
             <Route element={<Navigate replace to="/" />} path="*" />
         </Routes>

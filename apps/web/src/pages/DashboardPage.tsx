@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import AppLayout from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/toast";
 import {
     Card,
     CardContent,
@@ -78,8 +79,18 @@ export default function DashboardPage() {
             const loadedCourses = await listCourses();
 
             setCourses(loadedCourses);
+            toast.add({
+                title: "Study guides refreshed",
+                type: "success",
+            });
         } catch (error) {
-            setErrorMessage(getReadableError(error));
+            const message = getReadableError(error);
+            setErrorMessage(message);
+            toast.add({
+                title: "Could not refresh study guides",
+                description: message,
+                type: "error",
+            });
         } finally {
             setIsLoading(false);
         }

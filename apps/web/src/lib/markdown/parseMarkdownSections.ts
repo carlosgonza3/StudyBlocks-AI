@@ -1,4 +1,5 @@
 import { createHeadingId } from "@/lib/markdown/createHeadingId";
+import { stripInlineMarkdown } from "@/lib/markdown/stripInlineMarkdown";
 import type { StudySection } from "@/types/study-section";
 
 type SectionStackItem = StudySection;
@@ -12,7 +13,9 @@ function getHeadingLevel(line: string) {
 
     return {
         level: match[1].length,
-        title: match[2].trim(),
+        title: stripInlineMarkdown(
+            match[2].trim(),
+        ),
     };
 }
 

@@ -3,6 +3,7 @@ import { type FormEvent, useEffect, useId, useState } from "react";
 import { Loader2, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/toast";
 
 import { createCourse } from "../api/coursesApi";
 import type { Course } from "../types/course";
@@ -91,10 +92,21 @@ export function CreateCourseDialog({
             });
 
             onCourseCreated(createdCourse);
+            toast.add({
+                title: "Study guide created",
+                description: `${createdCourse.title} is ready to edit.`,
+                type: "success",
+            });
             resetForm();
             onClose();
         } catch (error) {
-            setErrorMessage(getReadableError(error));
+            const message = getReadableError(error);
+            setErrorMessage(message);
+            toast.add({
+                title: "Could not create study guide",
+                description: message,
+                type: "error",
+            });
         } finally {
             setIsSubmitting(false);
         }

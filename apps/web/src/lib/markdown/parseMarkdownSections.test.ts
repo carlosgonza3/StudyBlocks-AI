@@ -180,6 +180,27 @@ describe("parseMarkdownSections", () => {
         expect(sections[0].id).not.toBe(sections[1].id);
     });
 
+    it("removes inline Markdown formatting from outline titles", () => {
+        const sections = parseMarkdownSections(
+            [
+                "# **Bold** and __underlined__",
+                "## A [linked topic](https://example.com) with `code`",
+                "### ~~Old~~ and *new*",
+            ].join("\n"),
+        );
+
+        expect(sections[0].title).toBe(
+            "Bold and underlined",
+        );
+        expect(
+            sections[0].children[0].title,
+        ).toBe("A linked topic with code");
+        expect(
+            sections[0].children[0]
+                .children[0].title,
+        ).toBe("Old and new");
+    });
+
     it("assigns document order across nested and root sections", () => {
         const markdown = [
             "# First",

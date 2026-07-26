@@ -29,10 +29,26 @@ import AppLogo from "@/assets/studyblocks-icon.svg";
 import AppLogoWhite from "@/assets/studyblocks-icon-white.svg";
 import Settings from "@/settings/main.json";
 
-export default function HeaderLayout() {
+type HeaderLayoutProps = {
+    onNavigateRequest?: (path: string) => void;
+};
+
+export default function HeaderLayout({
+    onNavigateRequest,
+}: HeaderLayoutProps) {
     const { theme, toggleTheme } = useTheme();
 
     const logo = theme === "dark" ? AppLogoWhite : AppLogo;
+    const guardNavigation =
+        (path: string) =>
+        (event: React.MouseEvent<HTMLAnchorElement>) => {
+            if (!onNavigateRequest) {
+                return;
+            }
+
+            event.preventDefault();
+            onNavigateRequest(path);
+        };
 
     return (
         <header className="border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/70">
@@ -40,6 +56,7 @@ export default function HeaderLayout() {
                 <Link
                     to="/"
                     className="flex items-center gap-2 font-semibold text-foreground"
+                    onClick={guardNavigation("/")}
                 >
                     <img
                         src={logo}
@@ -84,21 +101,33 @@ export default function HeaderLayout() {
 
                             <DropdownMenuGroup>
                                 <DropdownMenuItem asChild>
-                                    <Link to="/account" className="cursor-pointer">
+                                    <Link
+                                        to="/account"
+                                        className="cursor-pointer"
+                                        onClick={guardNavigation("/account")}
+                                    >
                                         <UserCircle size={16} />
                                         Account
                                     </Link>
                                 </DropdownMenuItem>
 
                                 <DropdownMenuItem asChild>
-                                    <Link to="/documents/demo" className="cursor-pointer">
+                                    <Link
+                                        to="/documents/demo"
+                                        className="cursor-pointer"
+                                        onClick={guardNavigation("/documents/demo")}
+                                    >
                                         <BookOpen size={16} />
                                         My study guides
                                     </Link>
                                 </DropdownMenuItem>
 
                                 <DropdownMenuItem asChild>
-                                    <Link to="/progress" className="cursor-pointer">
+                                    <Link
+                                        to="/progress"
+                                        className="cursor-pointer"
+                                        onClick={guardNavigation("/progress")}
+                                    >
                                         <CircleGauge size={16} />
                                         My progress
                                     </Link>
@@ -136,7 +165,11 @@ export default function HeaderLayout() {
 
                             <DropdownMenuGroup>
                                 <DropdownMenuItem asChild>
-                                    <Link to="/settings" className="cursor-pointer">
+                                    <Link
+                                        to="/settings"
+                                        className="cursor-pointer"
+                                        onClick={guardNavigation("/settings")}
+                                    >
                                         <SettingsIcon size={16} />
                                         App settings
                                     </Link>
@@ -150,9 +183,15 @@ export default function HeaderLayout() {
                                     {theme === "dark" ? "Light mode" : "Dark mode"}
                                 </DropdownMenuItem>
 
-                                <DropdownMenuItem className="cursor-pointer">
-                                    <PencilRuler size={16}/>
-                                    Editor preferences
+                                <DropdownMenuItem asChild>
+                                    <Link
+                                        className="cursor-pointer"
+                                        to="/settings/editor"
+                                        onClick={guardNavigation("/settings/editor")}
+                                    >
+                                        <PencilRuler size={16}/>
+                                        Editor preferences
+                                    </Link>
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>
                         </DropdownMenuContent>
